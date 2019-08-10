@@ -1,0 +1,4 @@
+000 : General Error
+
+111 : UnSupport Command Error [{0}]
+112 : Command Parse Error [{0}]
