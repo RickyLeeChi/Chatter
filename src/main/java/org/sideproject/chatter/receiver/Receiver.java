@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class Receiver {
 	
-    @JmsListener(destination = ActiveMQConfig.QUEUE_NAME)
-    public void handleMessage(String message) {//implicit message type conversion
-        System.out.println("received: "+message);
-    }
+//    @JmsListener(destination = ActiveMQConfig.QUEUE_NAME)
+//    public void handleMessage(String message) {//implicit message type conversion
+//        System.out.println("received: "+message);
+//    }
 }

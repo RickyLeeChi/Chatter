@@ -20,7 +20,6 @@ public class Application
 	@Autowired
 	private JmsListenerEndpointRegistry jmslistenerEntry;
 	
-	
     public static void main( String[] args ) {
     	init(); 	
 
@@ -46,11 +45,14 @@ public class Application
     	sender.sendMessage("test message 1");
     	sender.sendMessage("test message 2");
     	
-    	System.out.println("-- shutting down listener container --");
-    	for (MessageListenerContainer listenerContainer :jmslistenerEntry.getListenerContainers()) {
-    		DefaultMessageListenerContainer container = (DefaultMessageListenerContainer) listenerContainer;
-    		container.shutdown();
-    	}
+//    	System.out.println("-- shutting down listener container --");
+//    	for (MessageListenerContainer listenerContainer :jmslistenerEntry.getListenerContainers()) {
+//    		DefaultMessageListenerContainer container = (DefaultMessageListenerContainer) listenerContainer;
+//    		container.shutdown();
+//    	}
+    	
+    	DefaultMessageListenerContainer container = applicationContext.getBean(DefaultMessageListenerContainer.class);
+    	container.shutdown();
 	}
     
 	private static void init() {
