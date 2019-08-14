@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
+import org.springframework.jms.config.SimpleJmsListenerEndpoint;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.listener.MessageListenerContainer;
 
@@ -21,7 +22,7 @@ import javax.jms.ConnectionFactory;
 @PropertySource("classpath:application.properties")
 public class ActiveMQConfig {
 	
-	public static final String QUEUE_NAME = "Mytest.queue";
+	public static final String DESTINATION_NAME = "Mytest.destination";
 	
 	@Value("${activemq.BrokerURL}")
     private String brokerURL;
@@ -34,7 +35,7 @@ public class ActiveMQConfig {
 
     @Bean
     public ConnectionFactory connectionFactory() {
-        ConnectionFactory connectionFactory =
+    	ActiveMQConnectionFactory connectionFactory =
                 new ActiveMQConnectionFactory(brokerURL);
         return connectionFactory;
     }
@@ -51,13 +52,35 @@ public class ActiveMQConfig {
 //        return factory;
 //    }
     
+//    @Bean
+//    public MessageListenerContainer listenerContainer() {
+//        DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
+//        container.setConnectionFactory(connectionFactory());
+//        container.setDestinationName(QUEUE_NAME);
+//        container.setMessageListener(new SimpleMessageListener());
+//        return container;
+//    }
+    
     @Bean
-    public MessageListenerContainer listenerContainer() {
-        DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory());
-        container.setDestinationName(QUEUE_NAME);
-        container.setMessageListener(new SimpleMessageListener());
-        return container;
+    public DefaultJmsListenerContainerFactory orderDefaultJmsListenerContainerFactory() {
+      DefaultJmsListenerContainerFactory factory =
+          new DefaultJmsListenerContainerFactory();
+      factory.setConnectionFactory(connectionFactory());
+      factory.setConcurrency(concurrentcy);
+      factory.setPubSubDomain(true);
+      
+      return factory;
+    }
+    
+    @Bean
+    public DefaultMessageListenerContainer orderMessageListenerContainer() {
+      SimpleJmsListenerEndpoint endpoint =
+          new SimpleJmsListenerEndpoint();
+      endpoint.setMessageListener(new SimpleMessageListener());
+      endpoint.setDestination(DESTINATION_NAME);
+
+      return orderDefaultJmsListenerContainerFactory()
+          .createListenerContainer(endpoint);
     }
 
 }

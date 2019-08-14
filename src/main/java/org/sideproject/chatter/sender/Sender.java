@@ -21,12 +21,12 @@ public class Sender {
     @PostConstruct
     public void init() {
         this.jmsTemplate = new JmsTemplate(connectionFactory);
-//        this.jmsTemplate.setPubSubDomain(true);
+        this.jmsTemplate.setPubSubDomain(true);
     }
 
     public void sendMessage(String message) {
     	log.info("sending: " + "<" + message + ">");
-        jmsTemplate.convertAndSend(ActiveMQConfig.QUEUE_NAME, message);
+        jmsTemplate.convertAndSend(ActiveMQConfig.DESTINATION_NAME, message);
     }
     
 
