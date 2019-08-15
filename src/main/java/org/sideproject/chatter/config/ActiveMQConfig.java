@@ -67,7 +67,7 @@ public class ActiveMQConfig {
           new DefaultJmsListenerContainerFactory();
       factory.setConnectionFactory(connectionFactory());
       factory.setConcurrency(concurrentcy);
-      factory.setPubSubDomain(true);
+//      factory.setPubSubDomain(true);
       
       return factory;
     }
