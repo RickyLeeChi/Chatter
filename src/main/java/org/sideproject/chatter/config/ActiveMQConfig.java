@@ -22,7 +22,8 @@ import javax.jms.ConnectionFactory;
 @PropertySource("classpath:application.properties")
 public class ActiveMQConfig {
 	
-	public static final String DESTINATION_NAME = "Mytest.destination";
+//	public static final String DESTINATION_NAME = "Mytest.destination";
+	public static final String DESTINATION_NAME = "RTEST1";
 	
 	@Value("${activemq.BrokerURL}")
     private String brokerURL;
@@ -66,21 +67,27 @@ public class ActiveMQConfig {
       DefaultJmsListenerContainerFactory factory =
           new DefaultJmsListenerContainerFactory();
       factory.setConnectionFactory(connectionFactory());
-      factory.setConcurrency(concurrentcy);
-//      factory.setPubSubDomain(true);
+//      factory.setConcurrency(concurrentcy);
+      factory.setPubSubDomain(true);
       
       return factory;
     }
     
     @Bean
     public DefaultMessageListenerContainer orderMessageListenerContainer() {
-      SimpleJmsListenerEndpoint endpoint =
-          new SimpleJmsListenerEndpoint();
-      endpoint.setMessageListener(new SimpleMessageListener());
-      endpoint.setDestination(DESTINATION_NAME);
-
+    	
+    	SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
+    	endpoint.setMessageListener(new SimpleMessageListener());
+    	endpoint.setDestination("");
+//    	
+//    	DefaultMessageListenerContainer m = orderDefaultJmsListenerContainerFactory()
+//    			.createListenerContainer(endpoint);
+//    	m.setDestinationName("RTEST2");
+//    	m.setCacheLevel(DefaultMessageListenerContainer.CACHE_CONNECTION);
+    	
       return orderDefaultJmsListenerContainerFactory()
-          .createListenerContainer(endpoint);
+          	.createListenerContainer(endpoint);
+//    	return m;
     }
 
 }

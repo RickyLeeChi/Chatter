@@ -3,17 +3,19 @@ package org.sideproject.chatter.message;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Message implements Serializable {
+public class ChatterMessage implements Serializable {
 
     private String content;
     private Date timestamp;
+    private String des_Name;
 
-    public Message() {
+	public ChatterMessage() {
     }
 
-    public Message(String content, Date timestamp) {
+    public ChatterMessage(String content, Date timestamp, String des_Name) {
         this.content = content;
         this.timestamp = timestamp;
+        this.des_Name = des_Name;
     }
 
     public String getContent() {
@@ -32,6 +34,14 @@ public class Message implements Serializable {
         this.timestamp = timestamp;
     }
 
+    public String getDes_Name() {
+		return des_Name;
+	}
+
+	public void setDes_Name(String des_Name) {
+		this.des_Name = des_Name;
+	}
+	
     @Override
     public String toString() {
         return "Order{" +
