@@ -41,17 +41,17 @@ public class ActiveMQConfig {
         return connectionFactory;
     }
 
-//    @Bean
-//    public JmsListenerContainerFactory<?> jmsListenerContainerFactory() {
-//        DefaultJmsListenerContainerFactory factory =
-//                new DefaultJmsListenerContainerFactory();
-//        factory.setConnectionFactory(connectionFactory());
-//        //core poll size=4 threads and max poll size 8 threads
-////        factory.setConcurrency("4-8");
-//        factory.setConcurrency(concurrentcy);
+    @Bean
+    public JmsListenerContainerFactory<?> jmsListenerContainerFactory() {
+        DefaultJmsListenerContainerFactory factory =
+                new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory());
+        //core poll size=4 threads and max poll size 8 threads
+//        factory.setConcurrency("4-8");
+        factory.setConcurrency(concurrentcy);
 //        factory.setPubSubDomain(true);
-//        return factory;
-//    }
+        return factory;
+    }
     
 //    @Bean
 //    public MessageListenerContainer listenerContainer() {
@@ -62,32 +62,32 @@ public class ActiveMQConfig {
 //        return container;
 //    }
     
-    @Bean
-    public DefaultJmsListenerContainerFactory orderDefaultJmsListenerContainerFactory() {
-      DefaultJmsListenerContainerFactory factory =
-          new DefaultJmsListenerContainerFactory();
-      factory.setConnectionFactory(connectionFactory());
-//      factory.setConcurrency(concurrentcy);
-      factory.setPubSubDomain(true);
-      
-      return factory;
-    }
-    
-    @Bean
-    public DefaultMessageListenerContainer orderMessageListenerContainer() {
-    	
-    	SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
-    	endpoint.setMessageListener(new SimpleMessageListener());
-    	endpoint.setDestination("");
+//    @Bean
+//    public DefaultJmsListenerContainerFactory orderDefaultJmsListenerContainerFactory() {
+//      DefaultJmsListenerContainerFactory factory =
+//          new DefaultJmsListenerContainerFactory();
+//      factory.setConnectionFactory(connectionFactory());
+////      factory.setConcurrency(concurrentcy);
+//      factory.setPubSubDomain(true);
+//      
+//      return factory;
+//    }
+//    
+//    @Bean
+//    public DefaultMessageListenerContainer orderMessageListenerContainer() {
 //    	
-//    	DefaultMessageListenerContainer m = orderDefaultJmsListenerContainerFactory()
-//    			.createListenerContainer(endpoint);
-//    	m.setDestinationName("RTEST2");
-//    	m.setCacheLevel(DefaultMessageListenerContainer.CACHE_CONNECTION);
-    	
-      return orderDefaultJmsListenerContainerFactory()
-          	.createListenerContainer(endpoint);
-//    	return m;
-    }
+//    	SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
+//    	endpoint.setMessageListener(new SimpleMessageListener());
+//    	endpoint.setDestination("");
+////    	
+////    	DefaultMessageListenerContainer m = orderDefaultJmsListenerContainerFactory()
+////    			.createListenerContainer(endpoint);
+////    	m.setDestinationName("RTEST2");
+////    	m.setCacheLevel(DefaultMessageListenerContainer.CACHE_CONNECTION);
+//    	
+//      return orderDefaultJmsListenerContainerFactory()
+//          	.createListenerContainer(endpoint);
+////    	return m;
+//    }
 
 }

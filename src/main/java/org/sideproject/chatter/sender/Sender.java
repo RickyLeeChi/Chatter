@@ -26,7 +26,7 @@ public class Sender {
     @PostConstruct
     public void init() {
         this.jmsTemplate = new JmsTemplate(connectionFactory);
-        this.jmsTemplate.setPubSubDomain(true);
+//        this.jmsTemplate.setPubSubDomain(true);
     }
 
     public void sendMessage(String message) {
