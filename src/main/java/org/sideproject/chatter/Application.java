@@ -1,6 +1,8 @@
 package org.sideproject.chatter;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
 
 import javax.jms.JMSException;
 import javax.jms.Session;
@@ -83,6 +85,26 @@ public class Application
 //
 //    	dmlc.setCacheLevel(DefaultMessageListenerContainer.CACHE_CONNECTION);
     	
+    	Scanner userInput = new Scanner(System.in);
+    	
+    	System.out.println("Please enter your user name : ");
+    	
+    	System.out.print("# ");
+    	
+    	boolean running = true;
+        
+        while(running){
+        	String userName = userInput.nextLine();
+         	
+        	if(userName.equalsIgnoreCase("exit")) {
+                userInput.close();
+                System.out.println("Bye ~ Bye!!");
+        		System.exit(0);
+        	}
+        	
+        	System.out.print("# ");
+        }
+        
     	addMessageListener();
     	
     	ChatterMessage message = new ChatterMessage("Rtest1", new Date(), "RTEST1");
