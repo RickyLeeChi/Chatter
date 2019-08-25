@@ -1,13 +1,19 @@
 package org.sideproject.chatter;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.Topic;
 
+import org.sideproject.chatter.chatroom.ChatRoom;
 import org.sideproject.chatter.message.ChatterMessage;
 import org.sideproject.chatter.receiver.SimpleMessageListener;
 import org.sideproject.chatter.sender.Sender;
@@ -41,6 +47,11 @@ public class Application
 	@Autowired
 	JmsListenerContainerFactory<?> jmsListenerContainerFactory;
 	
+	private static AtomicInteger roomIdSeed = new AtomicInteger(1000);
+	
+	List<Thread> chatrooms = new ArrayList<Thread>();
+
+	
     public static void main( String[] args ) {
     	init(); 	
 
@@ -50,22 +61,19 @@ public class Application
  
     }
     
-    private void addMessageListener() {
+    private void addMessageListener(List<String> names) {  	
+    	for(String name : names) {
+    		int id = roomIdSeed.incrementAndGet();
+    		SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
+    		endpoint.setMessageListener(new SimpleMessageListener());
+    		endpoint.setDestination(name);
+    		endpoint.setId(String.valueOf(id));
+    		
+    		jmslistenerEntry.registerListenerContainer(endpoint, jmsListenerContainerFactory);
+    		
+    		chatrooms.add(new Thread(new ChatRoom(name, id), name));
+    	}
     	
-		SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
-		endpoint.setMessageListener(new SimpleMessageListener());
-		endpoint.setDestination("RTEST1");
-		endpoint.setId("123");
-
-		jmslistenerEntry.registerListenerContainer(endpoint, jmsListenerContainerFactory);
-
-		SimpleJmsListenerEndpoint endpoint2 = new SimpleJmsListenerEndpoint();
-		endpoint2.setMessageListener(new SimpleMessageListener());
-		endpoint2.setDestination("RTEST2");
-		endpoint2.setId("456");
-
-		jmslistenerEntry.registerListenerContainer(endpoint2, jmsListenerContainerFactory);
-		
 		jmslistenerEntry.start();
     }
 
@@ -87,41 +95,59 @@ public class Application
     	
     	Scanner userInput = new Scanner(System.in);
     	
-    	System.out.println("Please enter your user name : ");
+    	System.out.println("Please enter chatter names : ");
     	
     	System.out.print("# ");
+    	
+    	List<String> chatterNames = new ArrayList<String>();
     	
     	boolean running = true;
         
         while(running){
-        	String userName = userInput.nextLine();
+        	String name = userInput.nextLine();
          	
-        	if(userName.equalsIgnoreCase("exit")) {
+        	if(name.equalsIgnoreCase("exit")) {
                 userInput.close();
-                System.out.println("Bye ~ Bye!!");
-        		System.exit(0);
+                System.out.println("Thank you!!");
+                running = false;
+        	}
+        	
+        	else {
+            	chatterNames.add(name);
         	}
         	
         	System.out.print("# ");
         }
         
-    	addMessageListener();
+        //
+    	addMessageListener(chatterNames);
     	
-    	ChatterMessage message = new ChatterMessage("Rtest1", new Date(), "RTEST1");
-    	
-    	ChatterMessage message2 = new ChatterMessage("Rtest2", new Date(), "RTEST2");
-    	
-    	for (MessageListenerContainer listenerContainer :jmslistenerEntry.getListenerContainers()) {
-    		DefaultMessageListenerContainer container = (DefaultMessageListenerContainer) listenerContainer;
-    		
-    		if(container.getDestinationName().equalsIgnoreCase("RTEST1")) {
-    			sender.sendMessage(message);
-    		}
-    		
-    		if(container.getDestinationName().equalsIgnoreCase("RTEST2")) {
-    			sender.sendMessage(message2);
-    		}
+    	//Open chat rooms
+    	for(Thread t : chatrooms) {
+    		t.start();
     	}
+    	
+    	
+    	List<ChatterMessage> messages = new ArrayList<ChatterMessage>();
+    	
+    	for(String name : chatterNames) {
+    		ChatterMessage message = new ChatterMessage(name, new Date(), name);
+    		messages.add(message);
+    	}
+    	
+//    	for (MessageListenerContainer listenerContainer :jmslistenerEntry.getListenerContainers()) {
+//    		DefaultMessageListenerContainer container = (DefaultMessageListenerContainer) listenerContainer;
+//    		
+//    		for(ChatterMessage message : messages) {
+//    			if(message.getDes_Name().equalsIgnoreCase(container.getDestinationName())) {
+//    				sender.sendMessage(message);
+//    			}
+//    		}
+//    	}
+    	
+    	for(ChatterMessage message : messages) {
+    		sender.sendMessage(message);
+		}
     	
     	
 //    	ChatterMessage message3 = new ChatterMessage("Rtest3", new Date(), "RTEST3");
