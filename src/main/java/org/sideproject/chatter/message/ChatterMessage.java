@@ -1,9 +1,8 @@
 package org.sideproject.chatter.message;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class ChatterMessage implements Serializable {
+public class ChatterMessage {
 
     private String content;
     private Date timestamp;
