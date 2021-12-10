@@ -18,7 +18,7 @@
 	<springframework.version>5.1.7.RELEASE</springframework.version>
 	<springframework-data.version>2.1.8.RELEASE</springframework-data.version>
 	<hibernate.version>5.3.0.Final</hibernate.version>
-	<log4j.version>2.11.2</log4j.version>
+	<log4j.version>2.15.0</log4j.version>
 	<log4j.version>2.11.2</log4j.version>
 	<commons-cli.version>1.4</commons-cli.version>
 	<slf4j.version>1.7.26</slf4j.version>
